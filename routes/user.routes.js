@@ -3,6 +3,10 @@ const user_routes = express();
 
 const bodyParser = require('body-parser');
 
+const session = require('express-session');
+const { SESSION_SECRET } = process.env;
+user_routes.use(session({ secret: SESSION_SECRET }));
+
 user_routes.use(bodyParser.json());
 user_routes.use(bodyParser.urlencoded({ extended: true }));
 
@@ -30,5 +34,15 @@ const upload = multer({ storage });
 
 user_routes.get('/register', userController.registerLoad);
 user_routes.post('/register', upload.single('image') ,userController.register);
+
+user_routes.get('/', userController.loadLogin);
+user_routes.post('/', userController.login);
+user_routes.post('/logout', userController.logout);
+
+user_routes.get('/dashboard', userController.loadDashboard);
+
+user_routes.get('*', (req, res)=>{
+    res.redirect('/');
+});
 
 module.exports = user_routes;
