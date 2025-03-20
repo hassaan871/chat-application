@@ -44,7 +44,7 @@ const login = async (req, res) => {
         const userData = await User.findOne({ email });
         if (!userData) return res.render('login', { message: "Email and password is incorrect." });
 
-        const passwordMatch = bcrypt.compare(password, userData.password);
+        const passwordMatch = await bcrypt.compare(password, userData.password);
         if (!passwordMatch) return res.render('login', { message: "Email and password is incorrect." });
 
         req.session.user = userData;
@@ -66,7 +66,7 @@ const logout = async (req, res) => {
 
 const loadDashboard = async (req, res) => {
     try {
-        res.render('dashboard', { user: req.session.user });
+        return res.render('dashboard', { user: req.session.user });
     } catch (error) {
         console.error(error.message);
     }

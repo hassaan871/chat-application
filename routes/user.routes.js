@@ -32,14 +32,16 @@ const userController = require('../controllers/user.controller');
 
 const upload = multer({ storage });
 
-user_routes.get('/register', userController.registerLoad);
+const auth = require('../middlewares/auth');
+
+user_routes.get('/register', auth.isLogout, userController.registerLoad);
 user_routes.post('/register', upload.single('image') ,userController.register);
 
-user_routes.get('/', userController.loadLogin);
+user_routes.get('/', auth.isLogout, userController.loadLogin);
 user_routes.post('/', userController.login);
-user_routes.post('/logout', userController.logout);
+user_routes.post('/logout', auth.isLogin, userController.logout);
 
-user_routes.get('/dashboard', userController.loadDashboard);
+user_routes.get('/dashboard', auth.isLogin, userController.loadDashboard);
 
 user_routes.get('*', (req, res)=>{
     res.redirect('/');
