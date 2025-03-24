@@ -5,7 +5,11 @@ const bodyParser = require('body-parser');
 
 const session = require('express-session');
 const { SESSION_SECRET } = process.env;
-user_routes.use(session({ secret: SESSION_SECRET }));
+user_routes.use(session({ 
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+ }));
 
 user_routes.use(bodyParser.json());
 user_routes.use(bodyParser.urlencoded({ extended: true }));
